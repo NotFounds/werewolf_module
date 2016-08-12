@@ -29,13 +29,13 @@ class App extends Component {
   getStepContent(stepIndex) {
     switch (stepIndex) {
       case 0:
-        return <p></p>
+        return (<p></p>)
       case 1:
-        return <GameSettingRoot />
+        return (<GameSettingRoot />)
       case 2:
-        return <GameControlerRoot />
+        return (<GameControlerRoot />)
       default:
-        return <p></p>
+        return (<p></p>)
     }
   }
 

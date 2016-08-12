@@ -111,7 +111,7 @@ defmodule Werewolf do
                 |> Map.put(:alivePeoples, [])
                 |> Map.put(:deadPeoples,  [])
                 |> Map.put(:resultOfDay,  [%{deadPeople: "マサハル"}])
-                |> Map.put(:date,         [])
+                |> Map.put(:date,         0)
     host_action = %{
       type: "RECEIVE_PLAYERS",
       participants: participants
@@ -155,6 +155,7 @@ defmodule Werewolf do
     host_action = %{
       type: "CHANGE_MODE",
       mode: data.mode,
+      data: data
     }
     participant_action = Enum.map(participants, fn {id, player} ->
       {id, %{
@@ -162,7 +163,7 @@ defmodule Werewolf do
           type: "UPDATE_TURN",
           page: player.page,
         player: player,
-          date: 0,
+          date: data.date,
         result: List.last(data.resultOfDay),
           role: data.role,
   alivePeoples: data.alivePeoples,
@@ -180,11 +181,12 @@ defmodule Werewolf do
                     |> elem(0)
                     |> Enum.into(%{})
     data = data
-            |> Map.put(:mode, "result")
+            |> Map.put(:mode, "destroied")
             |> Map.put(:participants, participants)
     host_action = %{
       type: "CHANGE_MODE",
       mode: data.mode,
+      data: data
     }
     participant_action = Enum.map(participants, fn {id, player} ->
       {id, %{

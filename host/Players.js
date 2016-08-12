@@ -5,10 +5,11 @@ import { Card, CardHeader, CardText } from 'material-ui/Card'
 
 const mapStateToProps = ({ data, players }) => ({ data, players })
 
-const Player = ({ name, role, isAlive }) => (
+const Player = ({ name, role, isAlive, page }) => (
   <tr>
     <td>{name}</td>
     <td>{role}</td>
+    <td>{page}</td>
     <td>{
       isAlive
         ? "生存"
@@ -30,6 +31,7 @@ const Players = ({ data, players }) => (
           <tr>
             <th>名前</th>
             <th>役</th>
+            <th>ページ</th>
             <th>状態</th>
           </tr>
         </thead>
@@ -42,6 +44,7 @@ const Players = ({ data, players }) => (
                 role={players[id].role != null
                         ? data.role[players[id].role].name
                         : ""}
+                page={players[id].page}
                 isAlive={players[id].isAlive}
               />
             ))

@@ -26,10 +26,16 @@ const players = handleActions({
   'RECEIVE_PLAYERS': (state, { participants }) => {
     return participants
   },
+  'CHANGE_MODE': (state, { data }) => {
+    return data.participants
+  }
 }, {})
 
 const data = handleActions({
   'RECEIVE_CONTENTS': (state, { data }) => {
+    return data
+  },
+  'CHANGE_MODE': (state, { data }) => {
     return data
   }
 }, {})
