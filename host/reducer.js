@@ -23,8 +23,8 @@ const players = handleActions({
   'RECEIVE_CONTENTS': (state, { data }) => {
     return data.participants
   },
-  'RECEIVE_PLAYERS': (state, { participants }) => {
-    return participants
+  'RECEIVE_PLAYERS': (state, { data }) => {
+    return data.participants
   },
   'CHANGE_MODE': (state, { data }) => {
     return data.participants
@@ -36,6 +36,10 @@ const data = handleActions({
     return data
   },
   'CHANGE_MODE': (state, { data }) => {
+    return data
+  },
+  'RECEIVE_PLAYERS': (state, { data }) =>
+  {
     return data
   }
 }, {})

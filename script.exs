@@ -10,7 +10,7 @@ defmodule Werewolf do
   def install, do: nil
 
   @modes ["preparation", "wait", "play", "result", "destroied"]
-  @pages ["name", "wait", "description", "morning", "evening", "votes", "result", "destroied"]
+  @pages ["name", "wait", "description", "morning", "evening", "meeting", "votes", "result", "destroied"]
   @roles %{villager: %{name: "村人",   isWerewoldSide: false, isWerewold: false, description: "特殊能力はありません。現在の情報を元に推理し、村を平和に導きましょう。"},
            psychic:  %{name: "霊媒師", isWerewoldSide: false, isWerewold: false, description: "夜に、処刑された人が人狼か否かを知ることができます。"},
            seer:     %{name: "占い師", isWerewoldSide: false, isWerewold: false, description: "夜に、生存者を1人占うことができ、人狼か否かを知ることができます。(狂人や狩人を占っても村人と出ます。)"},
@@ -107,14 +107,19 @@ defmodule Werewolf do
                        end)
                     |> elem(0)
                     |> Enum.into(%{})
+    alivePeoples = data.participants
+                    |> Enum.map_reduce(nil, fn {id, participant}, acc ->
+                         {participant.name, acc}
+                       end)
+                    |> elem(0)
     data = data |> Map.put(:participants, participants)
-                |> Map.put(:alivePeoples, [])
+                |> Map.put(:alivePeoples, alivePeoples)
                 |> Map.put(:deadPeoples,  [])
-                |> Map.put(:resultOfDay,  [%{deadPeople: "マサハル"}])
+                |> Map.put(:resultOfDay,  [%{morning: %{deadPeople: "マサハル"}}])
                 |> Map.put(:date,         0)
     host_action = %{
       type: "RECEIVE_PLAYERS",
-      participants: participants
+      data: data
     }
     participant_action = Enum.map(participants, fn {id, player} ->
       {id, %{
@@ -234,7 +239,7 @@ defmodule Werewolf do
       data = Map.put(data, :participants, participants)
       host_action = %{
         type: "RECEIVE_PLAYERS",
-        participants: participants
+        data: data
       }
       participant_action = %{
         type: "RECEIVE_CONTENTS",

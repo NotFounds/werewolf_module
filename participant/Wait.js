@@ -13,7 +13,7 @@ class Wait extends Component {
                 <Card>
                     <CardTitle title="人狼" subtitle="待機中"/>
                     <CardText>
-                        <p>参加者の登録を待っています。</p>
+                        <p>他の参加者を待っています。</p>
                         <p>この画面のまましばらくお待ち下さい。</p>
                     </CardText>
                     <div style={{textAlign: "center"}}>

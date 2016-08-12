@@ -40,10 +40,12 @@ const Players = ({ data, players }) => (
             Object.keys(players).map(id => (
               <Player
                 key={id}
-                name={players[id].name}
+                name={(players[id].name != "")
+                        ? players[id].name
+                        : "id: "+id}
                 role={players[id].role != null
                         ? data.role[players[id].role].name
-                        : ""}
+                        : "未定"}
                 page={players[id].page}
                 isAlive={players[id].isAlive}
               />
