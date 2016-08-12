@@ -3,8 +3,10 @@ import { connect } from 'react-redux'
 
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 
-import Wait from './Wait'
 import Role from './Role'
+import Wait from './Wait'
+import Morning from './Morning'
+import Destroied from './Destroied'
 import NameForm from './NameForm'
 import Description from './Description'
 
@@ -31,6 +33,8 @@ class App extends Component {
           { (page == "description") ? <Description /> : null }
           { (page == "wait") ? <Wait /> : null }
           { (page == "role") ? <Role /> : null }
+          { (page == "morning") ? <Morning /> : null }
+          { (page == "destroied") ? <Destroied /> : null }
         </div>
       </MuiThemeProvider>
     )

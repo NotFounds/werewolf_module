@@ -3,9 +3,12 @@ import { connect } from 'react-redux'
 
 import { Card, CardHeader, CardText } from 'material-ui/Card'
 
+import StartButton from './StartButton'
+import DestroyButton from './DestroyButton'
 import MatchingButton from './MatchingButton'
 
-const mapStateToProps = ({}) => ({
+const mapStateToProps = ({ data }) => ({
+  data
 })
 
 class GameControlerRoot extends Component {
@@ -20,6 +23,8 @@ class GameControlerRoot extends Component {
         <CardHeader title={"Controler"} />
         <CardText>
         <MatchingButton />
+        <StartButton />
+        <DestroyButton />
         </CardText>
       </Card>
     )

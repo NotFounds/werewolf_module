@@ -9,14 +9,14 @@ defmodule Werewolf do
 
   def install, do: nil
 
-  @modes ["preparation", "wait", "play", "result"]
-  @pages ["name", "wait", "description", "morning", "evening", "votes", "result"]
-  @roles %{villager: %{name: "村人",   description: "特殊能力はありません。現在の情報を元に推理し、村を平和に導きましょう。"},
-           psychic:  %{name: "霊媒師", description: "夜に、処刑された人が人狼か否かを知ることができます。"},
-           seer:     %{name: "占い師", description: "夜に、生存者を1人占うことができ、人狼か否かを知ることができます。(狂人や狩人を占っても村人と出ます。)"},
-           hunter:   %{name: "狩人",   description: "夜に、生存者1人を守ることができます。狩人が守っている人を人狼が襲撃した場合、襲撃は失敗し、翌日犠牲者は発生しません。しかし、自分自身を守ることはできません。"},
-           werewolf: %{name: "人狼",   description: "人の皮をかぶった狼です。夜のターンで村人を1人襲撃して食い殺し(噛み)ます。人狼は人間に対し、1対1では力で勝てますが、相手が村人2名だと勝てません。よって、人狼の数と村人の数が同数になるまで、1人づつ噛んでいきます。また、人狼が複数いる場合、他の人狼を知ることができます。"},
-           minion:   %{name: "狂人",   description: "人狼側ですが、占いと霊能結果では「人狼ではない」と判定されます。人狼側が勝利することで、狂人も勝利となります。"}}
+  @modes ["preparation", "wait", "play", "result", "destroied"]
+  @pages ["name", "wait", "description", "morning", "evening", "votes", "result", "destroied"]
+  @roles %{villager: %{name: "村人",   isWerewoldSide: false, isWerewold: false, description: "特殊能力はありません。現在の情報を元に推理し、村を平和に導きましょう。"},
+           psychic:  %{name: "霊媒師", isWerewoldSide: false, isWerewold: false, description: "夜に、処刑された人が人狼か否かを知ることができます。"},
+           seer:     %{name: "占い師", isWerewoldSide: false, isWerewold: false, description: "夜に、生存者を1人占うことができ、人狼か否かを知ることができます。(狂人や狩人を占っても村人と出ます。)"},
+           hunter:   %{name: "狩人",   isWerewoldSide: false, isWerewold: false, description: "夜に、生存者1人を守ることができます。狩人が守っている人を人狼が襲撃した場合、襲撃は失敗し、翌日犠牲者は発生しません。しかし、自分自身を守ることはできません。"},
+           werewolf: %{name: "人狼",   isWerewoldSide: true, isWerewold: true, description: "人の皮をかぶった狼です。夜のターンで村人を1人襲撃して食い殺し(噛み)ます。人狼は人間に対し、1対1では力で勝てますが、相手が村人2名だと勝てません。よって、人狼の数と村人の数が同数になるまで、1人づつ噛んでいきます。また、人狼が複数いる場合、他の人狼を知ることができます。"},
+           minion:   %{name: "狂人",   isWerewoldSide: true, isWerewold: false, description: "人狼側ですが、占いと霊能結果では「人狼ではない」と判定されます。人狼側が勝利することで、狂人も勝利となります。"}}
 
   def init do
     {:ok, %{"data" => %{
@@ -72,6 +72,8 @@ defmodule Werewolf do
       "fetch_contents" -> fetch_contents(data)
       "do_matching" -> matching(data)
       "set_role" -> set_role(data, options["params"])
+      "start" -> start(data)
+      "destroy" -> destroy(data)
     end
   end
 
@@ -106,7 +108,7 @@ defmodule Werewolf do
     data = data |> Map.put(:participants, participants)
                 |> Map.put(:alivePeoples, [])
                 |> Map.put(:deadPeoples,  [])
-                |> Map.put(:resultOfDay,  [])
+                |> Map.put(:resultOfDay,  [%{deadPeople: "マサハル"}])
                 |> Map.put(:date,         [])
     host_action = %{
       type: "RECEIVE_PLAYERS",
@@ -138,13 +140,68 @@ defmodule Werewolf do
     {:ok, %{"data" => data, "host" => %{action: action}}}
   end
 
+  def start(data) do
+    participants = data.participants
+                    |> Enum.map_reduce(0, fn {id, participant}, acc ->
+                         {{id, Map.put(participant, :page, "morning")}, 0}
+                       end)
+                    |> elem(0)
+                    |> Enum.into(%{})
+    data = %{data | mode: "play", participants: participants}
+    host_action = %{
+      type: "CHANGE_MODE",
+      mode: data.mode,
+    }
+    participant_action = Enum.map(participants, fn {id, player} ->
+      {id, %{
+        action: %{
+          type: "UPDATE_TURN",
+          page: player.page,
+        player: player,
+          date: 0,
+        result: List.last(data.resultOfDay),
+          role: data.role,
+  alivePeoples: data.alivePeoples,
+   deadPeoples: data.deadPeoples
+      }}}
+    end) |> Enum.into(%{})
+    {:ok, %{"data" => data, "host" => %{action: host_action}, "participant" => participant_action}}
+  end
+
+  def destroy(data) do
+    participants = data.participants
+                    |> Enum.map_reduce(0, fn {id, participant}, acc ->
+                         {{id, Map.put(participant, :page, "destroied")}, 0}
+                       end)
+                    |> elem(0)
+                    |> Enum.into(%{})
+    data = %{data | mode: "result", participants: participants}
+    host_action = %{
+      type: "CHANGE_MODE",
+      mode: data.mode,
+    }
+    participant_action = Enum.map(participants, fn {id, player} ->
+      {id, %{
+        action: %{
+          type: "CHANGE_PAGE",
+          page: player.page
+      }}}
+    end) |> Enum.into(%{})
+    {:ok, %{"data" => data, "host" => %{action: host_action}, "participant" => participant_action}}
+  end
+
   def fetch_contents(%{participants: participants} = data, id) do
-    page = participants[id].page
     action = %{
       type: "RECEIVE_CONTENTS",
-      page: page,
+      page: participants[id].page,
       player: participants[id],
-      role: data.role
+      count: data.count,
+      date:  data.date,
+      result: List.last(data.resultOfDay),
+      role: data.role,
+      meetingTime: data.meetingTime,
+      alivePeoples: data.alivePeoples,
+      deadPeoples: data.deadPeoples
     }
     {:ok, %{"data" => data, "participant" => %{id => %{action: action}}}}
   end

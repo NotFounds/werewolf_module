@@ -2,8 +2,8 @@ import { handleActions } from 'redux-actions'
 import combineSectionReducers from 'combine-section-reducers'
 
 const mode = handleActions({
-  'CHANGE_MODE': (state, { payload }) => {
-    return payload.mode
+  'CHANGE_MODE': (state, { mode }) => {
+    return mode
   }
 }, "wait")
 
