@@ -99,7 +99,7 @@ defmodule Werewolf do
     {roles, _} = data.roleCount
                   |> Enum.map_reduce([], fn {role, count}, acc -> {List.duplicate(role, count), acc} end)
     roles = roles |> List.flatten |> Enum.shuffle
-    participants = Enum.shuffle(data.participants)
+    participants = data.participants
                     |> Enum.map_reduce(0, fn {id, participant}, acc ->
                          {{id, Map.put(participant, :role, Enum.at(roles, acc)) |> Map.put(:page, "role")}, acc + 1}
                        end)
