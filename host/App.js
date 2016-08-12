@@ -74,6 +74,7 @@ class App extends Component {
             <Players />
             {this.getStepContent(stepIndex)}
           </div>
+          <br />
           <div>
             <FlatButton
                 label="Back"

@@ -76,6 +76,12 @@ const deadPeoples = handleActions({
   }
 }, {})
 
+const villageName = handleActions({
+  'RECEIVE_CONTENTS': (state, { villageName }) => {
+    return villageName
+  }
+}, "")
+
 const reducer = combineSectionReducers({
   page,
   player,
@@ -84,7 +90,8 @@ const reducer = combineSectionReducers({
   date,
   result,
   alivePeoples,
-  deadPeoples
+  deadPeoples,
+  villageName
 })
 
 export default reducer

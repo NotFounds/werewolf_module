@@ -21,7 +21,7 @@ class DestroyButton extends Component {
   render() {
     return (
       <RaisedButton
-        primary={false}
+        secondary={true}
         onClick={this.handleClick.bind(this)}
       >廃村にする</RaisedButton>
     )

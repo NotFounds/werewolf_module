@@ -20,6 +20,7 @@ defmodule Werewolf do
 
   def init do
     {:ok, %{"data" => %{
+      villageName: "",
       role: @roles,
       roleCount: %{villager: 0,
                    psychic:  0,
@@ -74,6 +75,7 @@ defmodule Werewolf do
       "set_role" -> set_role(data, options["params"])
       "start" -> start(data)
       "destroy" -> destroy(data)
+      "set_villageName" -> set_name(data, options["params"])
     end
   end
 
@@ -147,7 +149,9 @@ defmodule Werewolf do
                        end)
                     |> elem(0)
                     |> Enum.into(%{})
-    data = %{data | mode: "play", participants: participants}
+    data = data
+            |> Map.put(:mode, "play")
+            |> Map.put(:participants, participants)
     host_action = %{
       type: "CHANGE_MODE",
       mode: data.mode,
@@ -175,7 +179,9 @@ defmodule Werewolf do
                        end)
                     |> elem(0)
                     |> Enum.into(%{})
-    data = %{data | mode: "result", participants: participants}
+    data = data
+            |> Map.put(:mode, "result")
+            |> Map.put(:participants, participants)
     host_action = %{
       type: "CHANGE_MODE",
       mode: data.mode,
@@ -190,6 +196,17 @@ defmodule Werewolf do
     {:ok, %{"data" => data, "host" => %{action: host_action}, "participant" => participant_action}}
   end
 
+  def set_name(data, params) do
+    data = Map.put(data, :villageName, params)
+    action = %{
+      type: "RECEIVE_CONTENTS",
+      mode: data.mode,
+      data: data,
+      count: data.count
+    }
+    {:ok, %{"data" => data, "host" => %{action: action}}}
+  end
+
   def fetch_contents(%{participants: participants} = data, id) do
     action = %{
       type: "RECEIVE_CONTENTS",
@@ -201,7 +218,8 @@ defmodule Werewolf do
       role: data.role,
       meetingTime: data.meetingTime,
       alivePeoples: data.alivePeoples,
-      deadPeoples: data.deadPeoples
+      deadPeoples: data.deadPeoples,
+      villageName: data.villageName
     }
     {:ok, %{"data" => data, "participant" => %{id => %{action: action}}}}
   end

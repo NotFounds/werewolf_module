@@ -21,7 +21,6 @@ class MatchingButton extends Component {
   render() {
     return (
       <RaisedButton
-        primary={true}
         onClick={this.handleClick.bind(this)}
       >マッチング</RaisedButton>
     )

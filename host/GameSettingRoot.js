@@ -1,8 +1,10 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 
+import Divider from 'material-ui/Divider'
 import { Card, CardHeader, CardText } from 'material-ui/Card'
 
+import NameEdit from './NameEdit'
 import RoleSetting from './RoleSetting'
 import MatchingButton from './MatchingButton'
 
@@ -19,12 +21,14 @@ class GameSettingRoot extends Component {
     return(
       <Card>
         <CardHeader
-          title={"Setings"}
+          title={"Settings"}
           actAsExpander={true}
           showExpandableButton={true}
         />
         <CardText expandable={true}>
-        <RoleSetting />
+          <NameEdit />
+          <Divider />
+          <RoleSetting />
         </CardText>
       </Card>
     )

@@ -1,5 +1,5 @@
 import { take, put, fork, select, call } from 'redux-saga/effects'
-import { START, DESTROY, MATCH, ROLE } from './actions'
+import { START, DESTROY, MATCH, ROLE, NAME } from './actions'
 
 function* startSaga() {
   const { payload } = yield take(START)
@@ -21,11 +21,17 @@ function* setRoleSaga() {
   yield call(sendData, 'set_role', payload)
 }
 
+function* setNameSaga() {
+  const { payload } = yield take(NAME)
+  yield call(sendData, 'set_villageName', payload)
+}
+
 function* saga() {
   yield fork(startSaga)
   yield fork(destroySaga)
   yield fork(matchingSaga)
   yield fork(setRoleSaga)
+  yield fork(setNameSaga)
 }
 
 export default saga

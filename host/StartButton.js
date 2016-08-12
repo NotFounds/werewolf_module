@@ -21,7 +21,7 @@ class StartButton extends Component {
   render() {
     return (
       <RaisedButton
-        primary={false}
+        primary={true}
         onClick={this.handleClick.bind(this)}
       >ゲーム開始</RaisedButton>
     )
