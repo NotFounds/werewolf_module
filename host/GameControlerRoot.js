@@ -1,12 +1,14 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 
+import Divider from 'material-ui/Divider'
 import { Card, CardHeader, CardText } from 'material-ui/Card'
 
 import StateView from './StateView'
 import StartButton from './StartButton'
 import DestroyButton from './DestroyButton'
 import MatchingButton from './MatchingButton'
+import SkipMeetingButton from './SkipMeetingButton'
 
 const mapStateToProps = ({ data }) => ({
   data
@@ -26,7 +28,9 @@ class GameControlerRoot extends Component {
         <StateView />
         <MatchingButton />
         <StartButton />
-        <DestroyButton />
+        <DestroyButton /><br /><br />
+        <Divider /><br />
+        <SkipMeetingButton />
         </CardText>
       </Card>
     )

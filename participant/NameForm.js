@@ -28,9 +28,6 @@ class NameForm extends Component {
   handleClick() {
     const { dispatch } = this.props
     const { value } = this.state
-    this.setState({
-      value: '',
-    })
     dispatch(setName(value))
   }
 

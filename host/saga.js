@@ -1,29 +1,46 @@
 import { take, put, fork, select, call } from 'redux-saga/effects'
-import { START, DESTROY, MATCH, ROLE, NAME } from './actions'
+import { START, DESTROY, MATCH, ROLE, NAME, SKIP } from './actions'
 
 function* startSaga() {
-  const { payload } = yield take(START)
-  yield call(sendData, 'start')
+  while (true) {
+    const { payload } = yield take(START)
+    yield call(sendData, 'start')
+  }
 }
 
 function* destroySaga() {
-  const { payload } = yield take(DESTROY)
-  yield call(sendData, 'destroy')
+  while (true) {
+    const { payload } = yield take(DESTROY)
+    yield call(sendData, 'destroy')
+  }
 }
 
 function* matchingSaga() {
-  const { payload } = yield take(MATCH)
-  yield call(sendData, 'do_matching')
+  while (true) {
+    const { payload } = yield take(MATCH)
+    yield call(sendData, 'do_matching')
+  }
 }
 
 function* setRoleSaga() {
-  const { payload } = yield take(ROLE)
-  yield call(sendData, 'set_role', payload)
+  while (true) {
+    const { payload } = yield take(ROLE)
+    yield call(sendData, 'set_role', payload)
+  }
 }
 
 function* setNameSaga() {
-  const { payload } = yield take(NAME)
-  yield call(sendData, 'set_villageName', payload)
+  while (true) {
+    const { payload } = yield take(NAME)
+    yield call(sendData, 'set_villageName', payload)
+  }
+}
+
+function* skipMeetingSaga() {
+  while (true) {
+    const { payload } = yield take(SKIP)
+    yield call(sendData, 'skip_meeting')
+  }
 }
 
 function* saga() {
@@ -32,6 +49,7 @@ function* saga() {
   yield fork(matchingSaga)
   yield fork(setRoleSaga)
   yield fork(setNameSaga)
+  yield fork(skipMeetingSaga)
 }
 
 export default saga

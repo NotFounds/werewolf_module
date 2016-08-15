@@ -3,9 +3,16 @@ import { connect } from 'react-redux'
 
 import {Card, CardActions, CardText, CardTitle } from 'material-ui/Card'
 
+import WerewolfUtil from './Roles/WerewolfUtil'
+
 const mapStateToProps = ({ role, player }) => ({ role, player })
 
 class Role extends Component {
+    componentDidMount() {
+      if (this.props.role == "werewolf")
+        this.props.dispatch(getOptionalData())
+    }
+
     render() {
         const { role, player } = this.props
         return (
@@ -20,6 +27,11 @@ class Role extends Component {
                         <p>{player.role != null
                               ? role[player.role].description
                               : ""}</p>
+                        {
+                          (player.role == "werewolf")
+                            ? <WerewolfUtil />
+                            : null
+                        }
                     </CardText>
                 </Card>
             </div>

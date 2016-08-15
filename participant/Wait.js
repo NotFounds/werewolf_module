@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 
-import {Card, CardActions, CardText, CardTitle } from 'material-ui/Card'
+import { Card, CardActions, CardText, CardTitle } from 'material-ui/Card'
 import CircularProgress from 'material-ui/CircularProgress'
 
 const mapStateToProps = ({}) => ({})

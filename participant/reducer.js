@@ -53,6 +53,9 @@ const result = handleActions({
   'RECEIVE_CONTENTS': (state, { result }) => {
     return result
   },
+  'RECEIVE_RESULT': (state, { result }) => {
+    return result
+  },
   'UPDATE_TURN': (state, { result }) => {
     return result
   }
@@ -82,6 +85,15 @@ const villageName = handleActions({
   }
 }, "")
 
+const option = handleActions({
+  'RECEIVE_OPTIONS': (state, { option }) => {
+    return option
+  },
+  'RECEIVE_CONTENTS': (state, { option }) => {
+    return option
+  }
+}, {})
+
 const reducer = combineSectionReducers({
   page,
   player,
@@ -91,7 +103,8 @@ const reducer = combineSectionReducers({
   result,
   alivePeoples,
   deadPeoples,
-  villageName
+  villageName,
+  option
 })
 
 export default reducer

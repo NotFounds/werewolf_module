@@ -4,6 +4,12 @@ import combineSectionReducers from 'combine-section-reducers'
 const mode = handleActions({
   'CHANGE_MODE': (state, { mode }) => {
     return mode
+  },
+  'RECEIVE_CONTENTS': (state, { data }) => {
+    return data.mode
+  },
+  'RECEIVE_PLAYERS': (state, { data }) => {
+    return data.mode
   }
 }, "wait")
 
@@ -11,8 +17,8 @@ const count = handleActions({
   'ADD_PLAYER': (state, { count }) => {
     return count
   },
-  'RECEIVE_CONTENTS': (state, { count }) => {
-    return count
+  'RECEIVE_CONTENTS': (state, { data }) => {
+    return data.count
   }
 }, 0)
 
